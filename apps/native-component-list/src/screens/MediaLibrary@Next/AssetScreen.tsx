@@ -3,6 +3,7 @@ import { Image } from 'expo-image';
 import { Asset, MediaType, requestPermissionsAsync } from 'expo-media-library/next';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEffect, useState } from 'react';
+import { ContactField, PartialContactDetails, Contact } from 'expo-contacts/next';
 import { View, Pressable, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 
 enum TestState {
@@ -14,6 +15,12 @@ enum TestState {
 
 const AssetScreen = () => {
   const screenName = 'asset_screen';
+  // const fields = [ContactField.GIVEN_NAME, ContactField.EMAILS] as const
+  // const [contactDetails, setContactDetails] = useState<PartialContactDetails<typeof fields>>();
+  // const asynk = async () => {
+  //   const details = await Contact.getAllWithDetails(fields);
+  //   details[0].
+  // }
   const [asset, setAsset] = useState<Asset | null>(null);
   const [assetInfo, setAssetInfo] = useState<{
     uri: string;

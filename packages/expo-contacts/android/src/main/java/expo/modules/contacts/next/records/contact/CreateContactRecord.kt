@@ -11,7 +11,6 @@ import expo.modules.kotlin.records.Field
 import expo.modules.kotlin.records.Record
 
 data class CreateContactRecord(
-  @Field val displayName: String? = null,
   @Field val givenName: String? = null,
   @Field val middleName: String? = null,
   @Field val familyName: String? = null,

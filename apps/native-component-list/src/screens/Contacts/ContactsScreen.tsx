@@ -1,6 +1,7 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Contacts from 'expo-contacts';
+import { Contact } from 'expo-contacts/next';
 import { Directory, File, Paths } from 'expo-file-system';
 import { Platform } from 'expo-modules-core';
 import React from 'react';
@@ -201,7 +202,18 @@ function ContactsView({ navigation }: Props) {
         style={{ marginTop: 20, height: 50 }}
       />
       {Platform.OS === 'ios' && (
-        <Button title="Change access" onPress={changeAccess} style={styles.changeAccessButton} />
+        <>
+          <Button title="Change access" onPress={changeAccess} style={styles.changeAccessButton} />
+          <Button
+            onPress={() =>
+              (async () => {
+                const contact = await Contact.create({ givenName: 'Expo', familyName: 'Rocks' });
+                await contact.editWithForm();
+              })()
+            }
+            title="open form"
+          />
+        </>
       )}
       <ContactsList
         onEndReachedThreshold={-1.5}

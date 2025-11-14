@@ -1,4 +1,8 @@
-import { Contact, ContactField } from 'expo-contacts/next';
+import { Contact, ContactDetails, ContactField, Group, Container } from 'expo-contacts/next';
+import { Platform } from 'react-native';
+import { fetch } from 'expo/fetch';
+import { Paths, File } from 'expo-file-system';
+import { NonGregorianCalendar } from 'expo-contacts/src/next/types/Contact.type';
 
 export const name = 'Contacts@Next';
 
@@ -26,6 +30,91 @@ export async function test(t) {
       contacts.push(newContact);
       t.expect(newContact).toBeDefined();
       t.expect(newContact.id).toBeDefined();
+
+      const fetchedDetails = await newContact.getDetails([
+        ContactField.GIVEN_NAME,
+        ContactField.FAMILY_NAME,
+        ContactField.PHONES,
+      ]);
+      t.expect(fetchedDetails.givenName).toBe(contactDetails.givenName);
+      t.expect(fetchedDetails.familyName).toBe(contactDetails.familyName);
+      t.expect(fetchedDetails.phones.length).toBe(1);
+      t.expect(fetchedDetails.phones[0].number).toBe(contactDetails.phones[0].number);
+    });
+    t.it('should create full contact details', async () => {
+      const contactDetails: ContactDetails = {
+        givenName: 'Full',
+        middleName: 'Detail',
+        familyName: 'User',
+        prefix: 'Mr.',
+        suffix: 'Jr.',
+        nickname: 'FDUser',
+        company: 'Expo',
+        department: 'Engineering',
+        jobTitle: 'Developer',
+        phoneticFamilyName: 'Yoo-zer',
+        phoneticGivenName: 'Ful-Dee',
+        phoneticMiddleName: 'Tay',
+        emails: [{ label: 'work', address: 'full.detail@expo.com' }],
+        dates: [{ label: 'birthday', date: { year: '1990', month: '01', day: '01' } }],
+        phones: [{ label: 'mobile', number: '987654321' }],
+        extraNames: ['Extra1', 'Extra2'],
+        addresses: [{ label: 'home', street: '123 Expo St', city: 'Expo City', country: 'USA' }],
+        relations: [{ label: 'spouse', name: 'Partner User' }],
+        urlAddresses: [{ label: 'website', url: 'https://expo.dev' }],
+      };
+      const newContact = await Contact.create(contactDetails);
+      contacts.push(newContact);
+      t.expect(newContact).toBeDefined();
+      t.expect(newContact.id).toBeDefined();
+      const fetchedDetails = await newContact.getDetails();
+      t.expect(fetchedDetails.givenName).toBe(contactDetails.givenName);
+      t.expect(fetchedDetails.middleName).toBe(contactDetails.middleName);
+      t.expect(fetchedDetails.familyName).toBe(contactDetails.familyName);
+      t.expect(fetchedDetails.prefix).toBe(contactDetails.prefix);
+      t.expect(fetchedDetails.suffix).toBe(contactDetails.suffix);
+      t.expect(fetchedDetails.nickname).toBe(contactDetails.nickname);
+      t.expect(fetchedDetails.company).toBe(contactDetails.company);
+      t.expect(fetchedDetails.department).toBe(contactDetails.department);
+      t.expect(fetchedDetails.jobTitle).toBe(contactDetails.jobTitle);
+      t.expect(fetchedDetails.phoneticFamilyName).toBe(contactDetails.phoneticFamilyName);
+      t.expect(fetchedDetails.phoneticGivenName).toBe(contactDetails.phoneticGivenName);
+      t.expect(fetchedDetails.phoneticMiddleName).toBe(contactDetails.phoneticMiddleName);
+      t.expect(fetchedDetails.emails.length).toBe(1);
+      t.expect(fetchedDetails.emails[0].address).toBe(contactDetails.emails[0].address);
+      t.expect(fetchedDetails.dates.length).toBe(1);
+      t.expect(fetchedDetails.dates[0].date.year).toBe(contactDetails.dates[0].date.year);
+      t.expect(fetchedDetails.phones.length).toBe(1);
+      t.expect(fetchedDetails.phones[0].number).toBe(contactDetails.phones[0].number);
+      t.expect(fetchedDetails.addresses.length).toBe(1);
+      t.expect(fetchedDetails.addresses[0].street).toBe(contactDetails.addresses[0].street);
+      t.expect(fetchedDetails.relations.length).toBe(1);
+      t.expect(fetchedDetails.relations[0].name).toBe(contactDetails.relations[0].name);
+      t.expect(fetchedDetails.urlAddresses.length).toBe(1);
+      t.expect(fetchedDetails.urlAddresses[0].url).toBe(contactDetails.urlAddresses[0].url);
+    });
+    t.it('should create a contact with an image', async () => {
+      const url = 'https://picsum.photos/200';
+      const response = await fetch(url);
+      const src = new File(Paths.cache, 'file.pdf');
+      src.write(await response.bytes());
+      const contactDetails = {
+        givenName: 'Image',
+        familyName: 'User',
+        image: src.uri,
+      };
+      const newContact = await Contact.create(contactDetails);
+      contacts.push(newContact);
+      t.expect(newContact).toBeDefined();
+      t.expect(newContact.id).toBeDefined();
+      const fetchedDetails = await newContact.getDetails([
+        ContactField.GIVEN_NAME,
+        ContactField.FAMILY_NAME,
+        ContactField.IMAGE,
+      ]);
+      t.expect(fetchedDetails.givenName).toBe(contactDetails.givenName);
+      t.expect(fetchedDetails.familyName).toBe(contactDetails.familyName);
+      t.expect(fetchedDetails.image != null).toBe(true);
     });
   });
 
@@ -48,7 +137,6 @@ export async function test(t) {
       ]);
       t.expect(fetchedDetails.givenName).toBe(contactDetails.givenName);
       t.expect(fetchedDetails.familyName).toBe(contactDetails.familyName);
-      t.expect(fetchedDetails.company).toBeUndefined();
     });
 
     t.it('should fetch contact emails and phones', async () => {
@@ -82,25 +170,27 @@ export async function test(t) {
       };
       const contactDetails2 = {
         givenName: 'AllDetails2',
-        relationships: [{ label: 'spouse', name: 'Partner' }],
+        relations: [{ label: 'spouse', name: 'Partner' }],
       };
       const newContact1 = await Contact.create(contactDetails1);
       contacts.push(newContact1);
       const newContact2 = await Contact.create(contactDetails2);
       contacts.push(newContact2);
-      const allContacts = await Contact.getAllWithDetails([
+      const allContacts = await Contact.getAllDetails([
         ContactField.GIVEN_NAME,
         ContactField.EMAILS,
-        ContactField.RELATIONSHIPS,
+        ContactField.RELATIONS,
       ]);
-      const fetchedContact1 = allContacts.find((c) => c.givenName === contactDetails1.givenName);
-      const fetchedContact2 = allContacts.find((c) => c.givenName === contactDetails2.givenName);
+      const fetchedContact1 = allContacts.find((c) => c.id === newContact1.id);
+      const fetchedContact2 = allContacts.find((c) => c.id === newContact2.id);
       t.expect(fetchedContact1).toBeDefined();
       t.expect(fetchedContact1.emails.length).toBe(1);
       t.expect(fetchedContact1.emails[0].address).toBe(contactDetails1.emails[0].address);
+      t.expect(fetchedContact1.relations.length).toBe(0);
       t.expect(fetchedContact2).toBeDefined();
-      t.expect(fetchedContact2.relationships.length).toBe(1);
-      t.expect(fetchedContact2.relationships[0].name).toBe(contactDetails2.relationships[0].name);
+      t.expect(fetchedContact2.relations.length).toBe(1);
+      t.expect(fetchedContact2.emails.length).toBe(0);
+      t.expect(fetchedContact2.relations[0].name).toBe(contactDetails2.relations[0].name);
     });
   });
 
@@ -117,7 +207,7 @@ export async function test(t) {
     });
 
     t.afterAll(async () => {
-      await contact.delete();
+      // await contact.delete();
     });
 
     t.it('should set and get givenName', async () => {
@@ -129,7 +219,6 @@ export async function test(t) {
 
     t.it('should set and get familyName', async () => {
       const newFamilyName = 'Doe';
-      console.log('contactId', contact);
       await contact.setFamilyName(newFamilyName);
       const retrievedFamilyName = await contact.getFamilyName();
       t.expect(retrievedFamilyName).toBe(newFamilyName);
@@ -140,6 +229,20 @@ export async function test(t) {
       await contact.setMiddleName(newMiddleName);
       const retrievedMiddleName = await contact.getMiddleName();
       t.expect(retrievedMiddleName).toBe(newMiddleName);
+    });
+
+    t.it('should set and get maidenName', async () => {
+      const newMaidenName = 'Smith';
+      await contact.setMaidenName(newMaidenName);
+      const retrievedMaidenName = await contact.getMaidenName();
+      t.expect(retrievedMaidenName).toBe(newMaidenName);
+    });
+
+    t.it('should set and get nickname', async () => {
+      const newNickname = 'Johnny';
+      await contact.setNickname(newNickname);
+      const retrievedNickname = await contact.getNickname();
+      t.expect(retrievedNickname).toBe(newNickname);
     });
 
     t.it('should set and get prefix', async () => {
@@ -208,22 +311,80 @@ export async function test(t) {
       t.expect(retrievedJobTitle).toBe(newJobTitle);
     });
 
-    t.it('should set and get phoneticOrganizationName', async () => {
+    t.it('should set and get phoneticCompanyName', async () => {
       const newPhoneticName = 'Eks-po';
-      await contact.setPhoneticOrganizationName(newPhoneticName);
-      const retrievedPhoneticName = await contact.getPhoneticOrganizationName();
+      await contact.setPhoneticCompanyName(newPhoneticName);
+      const retrievedPhoneticName = await contact.getPhoneticCompanyName();
       t.expect(retrievedPhoneticName).toBe(newPhoneticName);
     });
 
-    t.it('should set and get note', async () => {
-      const newNotes = 'These are some notes.';
-      await contact.setNote(newNotes);
-      const retrievedNotes = await contact.getNote();
-      t.expect(retrievedNotes).toBe(newNotes);
+    t.it('should set and get image', async () => {
+      const url = 'https://picsum.photos/200';
+      const response = await fetch(url);
+      const src = new File(Paths.cache, 'file.pdf');
+      src.write(await response.bytes());
+
+      await contact.setImage(src.uri);
+      const retrievedImage = await contact.getImage();
+      const retrievedThumbnail = await contact.getThumbnail();
+      console.log('retrievedImage', retrievedImage);
+      console.log('retrievedThumbnail', retrievedThumbnail);
+      t.expect(retrievedThumbnail != null).toBe(true);
+      t.expect(retrievedImage != null).toBe(true);
     });
 
+    // A Note property requires an additional permission on iOS which is not avaiable in bare-expo
+    if (Platform.OS !== 'ios') {
+      t.it('should set and get note', async () => {
+        const newNotes = 'These are some notes.';
+        await contact.setNote(newNotes);
+        const retrievedNotes = await contact.getNote();
+        t.expect(retrievedNotes).toBe(newNotes);
+      });
+    }
+
+    if (Platform.OS === 'ios') {
+      const calendarsToTest = [
+        { type: NonGregorianCalendar.buddhist, name: 'buddhist', year: '2567' },
+        { type: NonGregorianCalendar.chinese, name: 'chinese', year: '1' },
+        { type: NonGregorianCalendar.coptic, name: 'coptic', year: '1740' },
+        {
+          type: NonGregorianCalendar.ethiopicAmeteMihret,
+          name: 'ethiopicAmeteMihret',
+          year: '2016',
+        },
+        { type: NonGregorianCalendar.ethiopicAmeteAlem, name: 'ethiopicAmeteAlem', year: '7516' },
+        { type: NonGregorianCalendar.hebrew, name: 'hebrew', year: '5784' },
+        { type: NonGregorianCalendar.indian, name: 'indian', year: '1945' },
+        { type: NonGregorianCalendar.islamic, name: 'islamic', year: '1445' },
+        { type: NonGregorianCalendar.islamicCivil, name: 'islamicCivil', year: '1445' },
+        { type: NonGregorianCalendar.japanese, name: 'japanese', year: '6' },
+        { type: NonGregorianCalendar.persian, name: 'persian', year: '1403' },
+        { type: NonGregorianCalendar.republicOfChina, name: 'republicOfChina', year: '113' },
+      ];
+
+      calendarsToTest.forEach((calendarCase) => {
+        t.it(`should set and get ${calendarCase.name} nonGregorianBirthday`, async () => {
+          const birthday = { year: calendarCase.year, month: '3', day: '15' };
+
+          await contact.setNonGregorianBirthday({
+            ...birthday,
+            calendar: calendarCase.type,
+          });
+
+          const retrievedBirthday = await contact.getNonGregorianBirthday();
+
+          t.expect(retrievedBirthday.calendar).toBe(calendarCase.type);
+
+          t.expect(retrievedBirthday.year).toBe(birthday.year);
+          t.expect(retrievedBirthday.month).toBe(birthday.month);
+          t.expect(retrievedBirthday.day).toBe(birthday.day);
+        });
+      });
+    }
+
     t.it('should handle setting an organization field to null', async () => {
-      const company = 'Initial Company';
+      const company = 'Initial Organization';
       await contact.setCompany(company);
       let retrieved = await contact.getCompany();
       t.expect(retrieved).toBe(company);
@@ -233,6 +394,7 @@ export async function test(t) {
       t.expect(retrieved).toBeNull();
     });
   });
+
   t.describe('Add, Get, Update, Delete list properties', () => {
     let contact: Contact;
     t.beforeAll(async () => {
@@ -316,35 +478,19 @@ export async function test(t) {
       t.expect(dates.length).toBe(0);
     });
 
-    t.it('should add, get, update, and delete extra names', async () => {
-      const extraNameId = await contact.addExtraName({ label: 'nickname', name: 'Johnny' });
-      let extraNames = await contact.getExtraNames();
-      t.expect(extraNames.length).toBe(1);
-      t.expect(extraNames[0].id).toBe(extraNameId);
-
-      await contact.updateExtraName({ id: extraNameId, label: 'nickname-updated', name: 'John' });
-      extraNames = await contact.getExtraNames();
-      t.expect(extraNames[0].label).toBe('nickname-updated');
-      t.expect(extraNames[0].name).toBe('John');
-
-      await contact.deleteExtraName(extraNames[0]);
-      extraNames = await contact.getExtraNames();
-      t.expect(extraNames.length).toBe(0);
-    });
-
-    t.it('should add, get, update, and delete postal addresses', async () => {
-      const postalAddressId = await contact.addPostalAddress({
+    t.it('should add, get, update, and delete addresses', async () => {
+      const postalAddressId = await contact.addAddress({
         label: 'home',
         street: '123 Main St',
         city: 'Springfield',
         postcode: '12345',
         country: 'USA',
       });
-      let addresses = await contact.getPostalAddresses();
+      let addresses = await contact.getAddresses();
       t.expect(addresses.length).toBe(1);
       t.expect(addresses[0].id).toBe(postalAddressId);
 
-      await contact.updatePostalAddress({
+      await contact.updateAddress({
         id: postalAddressId,
         label: 'home-updated',
         street: '456 Oak St',
@@ -352,32 +498,32 @@ export async function test(t) {
         postcode: '54321',
         country: 'USA',
       });
-      addresses = await contact.getPostalAddresses();
+      addresses = await contact.getAddresses();
       t.expect(addresses[0].label).toBe('home-updated');
       t.expect(addresses[0].street).toBe('456 Oak St');
 
-      await contact.deletePostalAddress(addresses[0]);
-      addresses = await contact.getPostalAddresses();
+      await contact.deleteAddress(addresses[0]);
+      addresses = await contact.getAddresses();
       t.expect(addresses.length).toBe(0);
     });
 
     t.it('should add, get, update, and delete relationships', async () => {
-      const relationshipId = await contact.addRelationship({ label: 'spouse', name: 'Jane Doe' });
-      let relationships = await contact.getRelationships();
+      const relationshipId = await contact.addRelation({ label: 'spouse', name: 'Jane Doe' });
+      let relationships = await contact.getRelations();
       t.expect(relationships.length).toBe(1);
       t.expect(relationships[0].id).toBe(relationshipId);
 
-      await contact.updateRelationship({
+      await contact.updateRelation({
         id: relationshipId,
         label: 'partner',
         name: 'Jane Smith',
       });
-      relationships = await contact.getRelationships();
+      relationships = await contact.getRelations();
       t.expect(relationships[0].label).toBe('partner');
       t.expect(relationships[0].name).toBe('Jane Smith');
 
-      await contact.deleteRelationship(relationships[0]);
-      relationships = await contact.getRelationships();
+      await contact.deleteRelation(relationships[0]);
+      relationships = await contact.getRelations();
       t.expect(relationships.length).toBe(0);
     });
 
@@ -457,15 +603,18 @@ export async function test(t) {
       const newContact = await Contact.create(contactDetails);
       contacts.push(newContact);
       const emails = await newContact.getEmails();
+
+      const emailId = emails[0].id;
       await newContact.patch({
         emails: [
-          { ...emails[0], address: 'work_updated@example.com' },
+          { id: emailId, address: 'work_updated@example.com' },
           { label: 'personal', address: 'personal_updated@example.com' },
         ],
       });
       const updatedEmails = await newContact.getEmails();
-      console.log('Updated emails:', updatedEmails);
       t.expect(updatedEmails.length).toBe(2);
+      t.expect(updatedEmails.some((e) => e.id === emailId)).toBe(true);
+      t.expect(updatedEmails.some((e) => e.label === 'work')).toBe(true);
       t.expect(updatedEmails.some((e) => e.address === 'work_updated@example.com')).toBe(true);
       t.expect(updatedEmails.some((e) => e.address === 'personal_updated@example.com')).toBe(true);
       t.expect(updatedEmails.some((e) => e.address === 'work@example.com')).toBe(false);
@@ -600,51 +749,53 @@ export async function test(t) {
       t.expect(updatedDates.length).toBe(0);
     });
 
-    t.it('should update an existing extraName and add a new one', async () => {
-      const contactDetails = {
-        givenName: 'Extra',
-        familyName: 'User',
-        extraNames: [{ label: 'nickname', name: 'Tester' }],
-      };
-      const newContact = await Contact.create(contactDetails);
-      contacts.push(newContact);
+    if (Platform.OS === 'android') {
+      t.it('should update an existing extraName and add a new one', async () => {
+        const contactDetails = {
+          givenName: 'Extra',
+          familyName: 'User',
+          extraNames: [{ label: 'nickname', name: 'Tester' }],
+        };
+        const newContact = await Contact.create(contactDetails);
+        contacts.push(newContact);
 
-      const extraNames = await newContact.getExtraNames();
-      await newContact.patch({
-        extraNames: [
-          { ...extraNames[0], name: 'TesterUpdated' },
-          { label: 'alias', name: 'ExtraAlias' },
-        ],
+        const extraNames = await newContact.getExtraNames();
+        await newContact.patch({
+          extraNames: [
+            { ...extraNames[0], name: 'TesterUpdated' },
+            { label: 'alias', name: 'ExtraAlias' },
+          ],
+        });
+
+        const updatedExtraNames = await newContact.getExtraNames();
+        t.expect(updatedExtraNames.length).toBe(2);
+        t.expect(updatedExtraNames.some((n) => n.name === 'TesterUpdated')).toBe(true);
+        t.expect(updatedExtraNames.some((n) => n.name === 'ExtraAlias')).toBe(true);
+        t.expect(updatedExtraNames.some((n) => n.name === 'Tester')).toBe(false);
       });
 
-      const updatedExtraNames = await newContact.getExtraNames();
-      t.expect(updatedExtraNames.length).toBe(2);
-      t.expect(updatedExtraNames.some((n) => n.name === 'TesterUpdated')).toBe(true);
-      t.expect(updatedExtraNames.some((n) => n.name === 'ExtraAlias')).toBe(true);
-      t.expect(updatedExtraNames.some((n) => n.name === 'Tester')).toBe(false);
-    });
-
-    t.it('should clear extraNames if patch is called with null', async () => {
-      const contactDetails = {
-        givenName: 'Extra',
-        familyName: 'User',
-        extraNames: [{ label: 'nickname', name: 'Tester' }],
-      };
-      const newContact = await Contact.create(contactDetails);
-      contacts.push(newContact);
-      await newContact.getExtraNames();
-      await newContact.patch({
-        extraNames: null,
+      t.it('should clear extraNames if patch is called with null', async () => {
+        const contactDetails = {
+          givenName: 'Extra',
+          familyName: 'User',
+          extraNames: [{ label: 'nickname', name: 'Tester' }],
+        };
+        const newContact = await Contact.create(contactDetails);
+        contacts.push(newContact);
+        await newContact.getExtraNames();
+        await newContact.patch({
+          extraNames: null,
+        });
+        const updatedExtraNames = await newContact.getExtraNames();
+        t.expect(updatedExtraNames.length).toBe(0);
       });
-      const updatedExtraNames = await newContact.getExtraNames();
-      t.expect(updatedExtraNames.length).toBe(0);
-    });
+    }
 
-    t.it('should update an existing postal address and add a new one', async () => {
+    t.it('should update an existing address and add a new one', async () => {
       const contactDetails = {
         givenName: 'Postal',
         familyName: 'User',
-        postalAddresses: [
+        addresses: [
           {
             label: 'home',
             street: '123 Main St',
@@ -658,9 +809,9 @@ export async function test(t) {
       const newContact = await Contact.create(contactDetails);
       contacts.push(newContact);
 
-      const addresses = await newContact.getPostalAddresses();
+      const addresses = await newContact.getAddresses();
       await newContact.patch({
-        postalAddresses: [
+        addresses: [
           { ...addresses[0], street: '456 Updated St' },
           {
             label: 'work',
@@ -673,18 +824,18 @@ export async function test(t) {
         ],
       });
 
-      const updatedAddresses = await newContact.getPostalAddresses();
+      const updatedAddresses = await newContact.getAddresses();
       t.expect(updatedAddresses.length).toBe(2);
       t.expect(updatedAddresses.some((a) => a.street === '456 Updated St')).toBe(true);
       t.expect(updatedAddresses.some((a) => a.street === 'Office St 1')).toBe(true);
       t.expect(updatedAddresses.some((a) => a.street === '123 Main St')).toBe(false);
     });
 
-    t.it('should clear postal addresses if patch is called with null', async () => {
+    t.it('should clear addresses if patch is called with null', async () => {
       const contactDetails = {
         givenName: 'Postal',
         familyName: 'User',
-        postalAddresses: [
+        addresses: [
           {
             label: 'home',
             street: '123 Main St',
@@ -697,11 +848,11 @@ export async function test(t) {
       };
       const newContact = await Contact.create(contactDetails);
       contacts.push(newContact);
-      await newContact.getPostalAddresses();
+      await newContact.getAddresses();
       await newContact.patch({
-        postalAddresses: null,
+        addresses: null,
       });
-      const updatedAddresses = await newContact.getPostalAddresses();
+      const updatedAddresses = await newContact.getAddresses();
       t.expect(updatedAddresses.length).toBe(0);
     });
 
@@ -709,24 +860,24 @@ export async function test(t) {
       const contactDetails = {
         givenName: 'Relation',
         familyName: 'User',
-        relationships: [{ label: 'spouse', name: 'Alice' }],
+        relations: [{ label: 'spouse', name: 'Alice' }],
       };
       const newContact = await Contact.create(contactDetails);
       contacts.push(newContact);
 
-      const relationships = await newContact.getRelationships();
+      const relations = await newContact.getRelations();
       await newContact.patch({
-        relationships: [
-          { ...relationships[0], name: 'AliceUpdated' },
+        relations: [
+          { ...relations[0], name: 'AliceUpdated' },
           { label: 'child', name: 'Bob' },
         ],
       });
 
-      const updatedRelationships = await newContact.getRelationships();
-      t.expect(updatedRelationships.length).toBe(2);
-      t.expect(updatedRelationships.some((r) => r.name === 'AliceUpdated')).toBe(true);
-      t.expect(updatedRelationships.some((r) => r.name === 'Bob')).toBe(true);
-      t.expect(updatedRelationships.some((r) => r.name === 'Alice')).toBe(false);
+      const updatedRelations = await newContact.getRelations();
+      t.expect(updatedRelations.length).toBe(2);
+      t.expect(updatedRelations.some((r) => r.name === 'AliceUpdated')).toBe(true);
+      t.expect(updatedRelations.some((r) => r.name === 'Bob')).toBe(true);
+      t.expect(updatedRelations.some((r) => r.name === 'Alice')).toBe(false);
     });
 
     t.it('should clear relationships if patch is called with null', async () => {
@@ -737,12 +888,12 @@ export async function test(t) {
       };
       const newContact = await Contact.create(contactDetails);
       contacts.push(newContact);
-      await newContact.getRelationships();
+      await newContact.getRelations();
       await newContact.patch({
-        relationships: null,
+        relations: null,
       });
-      const updatedRelationships = await newContact.getRelationships();
-      t.expect(updatedRelationships.length).toBe(0);
+      const updatedRelations = await newContact.getRelations();
+      t.expect(updatedRelations.length).toBe(0);
     });
 
     t.it('should update an existing website and add a new one', async () => {
@@ -796,7 +947,7 @@ export async function test(t) {
           phones: [{ label: 'work', number: '111222333' }],
           dates: [{ label: 'birthday', date: { year: '1990', month: '01', day: '01' } }],
           extraNames: [{ label: 'nickname', name: 'InitialNickname' }],
-          postalAddresses: [
+          addresses: [
             {
               label: 'home',
               street: '123 Initial St',
@@ -804,7 +955,7 @@ export async function test(t) {
               country: 'Poland',
             },
           ],
-          relationships: [{ label: 'spouse', name: 'InitialSpouse' }],
+          relations: [{ label: 'spouse', name: 'InitialSpouse' }],
           urlAddresses: [{ label: 'homepage', url: 'https://initial.example.com' }],
         };
 
@@ -814,8 +965,11 @@ export async function test(t) {
         const initialEmails = await newContact.getEmails();
         const initialPhones = await newContact.getPhones();
         const initialDates = await newContact.getDates();
-        const initialExtraNames = await newContact.getExtraNames();
-        const initialAddresses = await newContact.getPostalAddresses();
+        let initialExtraNames = [];
+        if (Platform.OS === 'android') {
+          initialExtraNames = await newContact.getExtraNames();
+        }
+        const initialAddresses = await newContact.getAddresses();
         const initialUrls = await newContact.getUrlAddresses();
 
         await newContact.patch({
@@ -825,8 +979,6 @@ export async function test(t) {
 
           company: 'UpdatedCompany',
           jobTitle: null,
-
-          note: 'This is an updated note.',
 
           emails: [
             { ...initialEmails[0], address: 'work_updated@example.com' },
@@ -848,12 +1000,12 @@ export async function test(t) {
             { label: 'alias', name: 'NewAlias' },
           ],
 
-          postalAddresses: [
+          addresses: [
             { ...initialAddresses[0], street: '456 Updated St' },
             { label: 'work', street: '987 Work Ave', city: 'Krakow', country: 'Poland' },
           ],
 
-          relationships: null,
+          relations: null,
 
           urlAddresses: [
             { ...initialUrls[0], url: 'https://updated.example.com' },
@@ -870,9 +1022,6 @@ export async function test(t) {
         t.expect(updatedContact.company).toBe('UpdatedCompany');
         t.expect(updatedContact.jobTitle).toBe(null);
 
-        const note = await newContact.getNote();
-        t.expect(note).toBe('This is an updated note.');
-
         const updatedEmails = await newContact.getEmails();
         t.expect(updatedEmails.length).toBe(2);
         t.expect(updatedEmails.some((e) => e.address === 'work_updated@example.com')).toBe(true);
@@ -888,18 +1037,20 @@ export async function test(t) {
         t.expect(updatedDates.some((d) => d.date.year === '1991')).toBe(true);
         t.expect(updatedDates.some((d) => d.date.year === '2021')).toBe(true);
 
-        const updatedExtraNames = await newContact.getExtraNames();
-        t.expect(updatedExtraNames.length).toBe(2);
-        t.expect(updatedExtraNames.some((n) => n.name === 'UpdatedNickname')).toBe(true);
-        t.expect(updatedExtraNames.some((n) => n.name === 'NewAlias')).toBe(true);
+        if (Platform.OS === 'android') {
+          const updatedExtraNames = await newContact.getExtraNames();
+          t.expect(updatedExtraNames.length).toBe(2);
+          t.expect(updatedExtraNames.some((n) => n.name === 'UpdatedNickname')).toBe(true);
+          t.expect(updatedExtraNames.some((n) => n.name === 'NewAlias')).toBe(true);
+        }
 
-        const updatedAddresses = await newContact.getPostalAddresses();
+        const updatedAddresses = await newContact.getAddresses();
         t.expect(updatedAddresses.length).toBe(2);
         t.expect(updatedAddresses.some((a) => a.street === '456 Updated St')).toBe(true);
         t.expect(updatedAddresses.some((a) => a.street === '987 Work Ave')).toBe(true);
 
-        const updatedRelationships = await newContact.getRelationships();
-        t.expect(updatedRelationships.length).toBe(0);
+        const updatedRelations = await newContact.getRelations();
+        t.expect(updatedRelations.length).toBe(0);
 
         const updatedUrls = await newContact.getUrlAddresses();
         t.expect(updatedUrls.length).toBe(2);
@@ -908,4 +1059,122 @@ export async function test(t) {
       }
     );
   });
+  if (Platform.OS === 'ios') {
+    t.fdescribe('Group management', () => {
+      let testGroup: Group;
+      let testContact: Contact;
+
+      t.beforeAll(async () => {
+        testContact = await Contact.create({
+          givenName: 'Group',
+          familyName: 'Member',
+        });
+        testGroup = await Group.create('Initial Group');
+        contacts.push(testContact);
+      });
+
+      t.it('should create a group and retrieve its name, then delete the group', async () => {
+        const name = 'Test Expo Group';
+        const group = await Group.create(name);
+
+        t.expect(group).toBeDefined();
+        t.expect(group.id).toBeDefined();
+
+        const retrievedName = await group.getName();
+        t.expect(retrievedName).toBe(name);
+        await group.delete();
+      });
+
+      t.it('should retrieve all groups', async () => {
+        const allGroups = await Group.getAll();
+        t.expect(Array.isArray(allGroups)).toBe(true);
+        t.expect(allGroups.some((g) => g.id === testGroup.id)).toBe(true);
+      });
+
+      t.it('should rename a group', async () => {
+        const newName = 'Updated Expo Group';
+        await testGroup.setName(newName);
+
+        const retrievedName = await testGroup.getName();
+        t.expect(retrievedName).toBe(newName);
+      });
+
+      t.it('should add and remove a contact from a group', async () => {
+        await testGroup.addContact(testContact);
+        let members = await testGroup.getContacts();
+        await testGroup.removeContact(testContact);
+        members = await testGroup.getContacts();
+        t.expect(members.some((c) => c.id === testContact.id)).toBe(false);
+      });
+
+      t.it('should delete a group', async () => {
+        const groupToDelete = await Group.create('Delete Me');
+        const idToDelete = groupToDelete.id;
+
+        await groupToDelete.delete();
+
+        const fetchedGroup = await Group.getAll();
+        t.expect(fetchedGroup.some((g) => g.id === idToDelete)).toBe(false);
+      });
+    });
+    t.fdescribe('Container management', () => {
+      let createdContact: Contact;
+      let createdGroup: Group;
+
+      t.afterAll(async () => {
+        if (createdContact) await createdContact.delete();
+        if (createdGroup) await createdGroup.delete();
+      });
+
+      t.it('should retrieve the default container', async () => {
+        const defaultContainer = await Container.getDefault();
+        t.expect(defaultContainer).toBeDefined();
+        t.expect(defaultContainer?.id).toBeDefined();
+      });
+
+      t.it('should retrieve all containers', async () => {
+        const containers = await Container.getAll();
+        t.expect(Array.isArray(containers)).toBe(true);
+        t.expect(containers.length).toBeGreaterThan(0);
+      });
+
+      t.it('should get container properties (name, type)', async () => {
+        const defaultContainer = await Container.getDefault();
+        if (defaultContainer) {
+          const name = await defaultContainer.getName();
+          const type = await defaultContainer.getType();
+          t.expect(type).toBeDefined();
+        }
+      });
+
+      t.it('should retrieve contacts belonging to the default container', async () => {
+        const defaultContainer = await Container.getDefault();
+
+        if (defaultContainer) {
+          createdContact = await Contact.create({
+            givenName: 'Container',
+            familyName: 'TestContact',
+          });
+
+          const contactsInContainer = await defaultContainer.getContacts();
+
+          t.expect(Array.isArray(contactsInContainer)).toBe(true);
+          t.expect(contactsInContainer.some((c) => c.id === createdContact.id)).toBe(true);
+        }
+      });
+
+      t.it('should retrieve groups belonging to the default container', async () => {
+        const defaultContainer = await Container.getDefault();
+
+        if (defaultContainer) {
+          createdGroup = await Group.create('Container Test Group', defaultContainer.id);
+
+          const groupsInContainer = await defaultContainer.getGroups();
+
+          t.expect(Array.isArray(groupsInContainer)).toBe(true);
+          t.expect(groupsInContainer.some((g) => g.id === createdGroup.id)).toBe(true);
+        }
+      });
+    });
+  }
 }

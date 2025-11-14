@@ -53,6 +53,8 @@ export default class TestScreen extends React.Component {
     const selectedModules = getTestModules().filter((m) =>
       selectedTestNames.includes(getScreenIdForLinking(m))
     );
+    console.log('HOOK', selectedTestNames);
+    console.log('HOOK', selectedModules);
 
     if (!selectedModules.length) {
       console.warn('[TEST_SUITE]', 'No selected modules', selectedTestNames);

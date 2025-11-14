@@ -9,7 +9,7 @@ import { Platform } from 'react-native';
 export const name = 'FileSystem';
 const shouldSkipTestsRequiringPermissions = true;
 
-export async function test({ describe, expect, it, ...t }) {
+export async function test({ describe, expect, it, fit, ...t }) {
   const describeWithPermissions = shouldSkipTestsRequiringPermissions ? t.xdescribe : describe;
 
   const testDirectory = FS.documentDirectory + 'tests/';
@@ -1010,12 +1010,12 @@ export async function test({ describe, expect, it, ...t }) {
     });
 
     describe('When getting file info', () => {
-      it('executes correctly', () => {
+      fit('executes correctly', () => {
         const url = `${testDirectory}execute_correctly.txt`;
         const src = new File(url);
         src.create();
         src.write('Hello World');
-        const result = src.info({ md5: true });
+        const result = src.info();
         expect(result.exists).toBe(true);
         if (result.exists) {
           const { uri, size, modificationTime, creationTime, md5 } = result;

@@ -55,7 +55,7 @@ class Contact(
 
   suspend fun patch(patchContactRecord: PatchContactRecord): Boolean {
     val existingContact = repository.getById(
-      setOf(StructuredNameField, OrganizationField),
+      setOf(StructuredNameField, OrganizationField, NoteField),
       contactId
     )
     val rawContactId = repository.getRawContactId(contactId)
@@ -72,10 +72,14 @@ class Contact(
   }
 
   suspend fun getDetails(fields: Set<ContactField>?): GetContactDetailsRecord {
+    val fields = if(fields == null || !fields.isEmpty() ) {
+      fields
+    } else {
+      ContactField.entries
+    }
     val extractableFields = fields
       ?.map { mapper.toExtractableField(it) }
       ?.toSet()
-      ?: setOf(StructuredNameField, OrganizationField, EmailField, PhoneField, StructuredPostalField, EventField, RelationField, WebsiteField, NicknameField)
     val existingContact = repository.getById(extractableFields, contactId)
     return mapper.toRecord(existingContact)
   }
