@@ -2029,6 +2029,9 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
     devDependencies:
+      '@types/node':
+        specifier: ^22.19.1
+        version: 22.19.1
       expo-module-scripts:
         specifier: ^5.0.7
         version: link:../../expo-module-scripts
@@ -6662,8 +6665,6 @@ packages:
   '@react-native/babel-preset@0.81.5':
     resolution: {integrity: sha512-UoI/x/5tCmi+pZ3c1+Ypr1DaRMDLI3y+Q70pVLLVgrnC3DHsHRIbHcCHIeG/IJvoeFqFM2sTdhSOLJrf8lOPrA==}
     engines: {node: '>= 20.19.4'}
-    peerDependencies:
-      '@babel/core': '*'
 
   '@react-native/babel-preset@0.83.0-nightly-20251104-502efe1cc':
     resolution: {integrity: sha512-hBfvEKgXb90+jsQVzlhPluFGr4+Kiy49WvheMVULQ0Tz8budP2Hz/0851VBdcHHBn/p4G8lKhlDCPTeiY1o7ag==}
@@ -6684,8 +6685,6 @@ packages:
   '@react-native/codegen@0.83.0-nightly-20251104-502efe1cc':
     resolution: {integrity: sha512-Ew7EM5zhwk4mdHMuRipi3cLfry8fJRRNEo5afg/Id8O0dGynW0GGD/ZKkNIJUSBzcv4ZXY6XR8ND+mNnqVzrXg==}
     engines: {node: '>= 20.19.4'}
-    peerDependencies:
-      '@babel/core': '*'
 
   '@react-native/community-cli-plugin@0.83.0-nightly-20251030-26ad9492b':
     resolution: {integrity: sha512-zf3BCiqJMtKmL/TyuVoZwIbmYBk3omfFfGQvdByssYBBF5hozxk1nhpRubuETMH14bRykoFmu1ZuXqN+GrK0GQ==}
@@ -15836,6 +15835,11 @@ snapshots:
   '@esbuild/win32-x64@0.25.12':
     optional: true
 
+  '@eslint-community/eslint-utils@4.9.0(eslint@8.57.1)':
+    dependencies:
+      eslint: 8.57.1
+      eslint-visitor-keys: 3.4.3
+
   '@eslint-community/eslint-utils@4.9.0(eslint@9.39.1(jiti@1.21.7))':
     dependencies:
       eslint: 9.39.1(jiti@1.21.7)
@@ -18229,15 +18233,14 @@ snapshots:
       - '@babel/core'
       - supports-color
 
-  '@react-native/babel-plugin-codegen@0.83.0-nightly-20251104-502efe1cc(@babel/core@7.28.5)':
+  '@react-native/babel-plugin-codegen@0.83.0-nightly-20251104-502efe1cc':
     dependencies:
       '@babel/traverse': 7.28.5
-      '@react-native/codegen': 0.83.0-nightly-20251104-502efe1cc(@babel/core@7.28.5)
+      '@react-native/codegen': 0.83.0-nightly-20251104-502efe1cc
     transitivePeerDependencies:
-      - '@babel/core'
       - supports-color
 
-  '@react-native/babel-preset@0.81.5(@babel/core@7.28.5)':
+  '@react-native/babel-preset@0.81.5':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-proposal-export-default-from': 7.27.1(@babel/core@7.28.5)
@@ -18330,7 +18333,7 @@ snapshots:
       '@babel/plugin-transform-typescript': 7.28.5(@babel/core@7.28.5)
       '@babel/plugin-transform-unicode-regex': 7.27.1(@babel/core@7.28.5)
       '@babel/template': 7.27.2
-      '@react-native/babel-plugin-codegen': 0.83.0-nightly-20251104-502efe1cc(@babel/core@7.28.5)
+      '@react-native/babel-plugin-codegen': 0.83.0-nightly-20251104-502efe1cc
       babel-plugin-syntax-hermes-parser: 0.32.0
       babel-plugin-transform-flow-enums: 0.0.2(@babel/core@7.28.5)
       react-refresh: 0.14.2
@@ -18359,7 +18362,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@react-native/codegen@0.83.0-nightly-20251104-502efe1cc(@babel/core@7.28.5)':
+  '@react-native/codegen@0.83.0-nightly-20251104-502efe1cc':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/parser': 7.28.5
@@ -18368,6 +18371,8 @@ snapshots:
       invariant: 2.2.4
       nullthrows: 1.1.1
       yargs: 17.7.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@react-native/community-cli-plugin@0.83.0-nightly-20251030-26ad9492b':
     dependencies:
@@ -19909,7 +19914,7 @@ snapshots:
       '@babel/plugin-transform-runtime': 7.28.5(@babel/core@7.28.5)
       '@babel/preset-react': 7.28.5(@babel/core@7.28.5)
       '@babel/preset-typescript': 7.28.5(@babel/core@7.28.5)
-      '@react-native/babel-preset': 0.81.5(@babel/core@7.28.5)
+      '@react-native/babel-preset': 0.81.5
       babel-plugin-react-compiler: 1.0.0
       babel-plugin-react-native-web: 0.21.2
       babel-plugin-syntax-hermes-parser: 0.29.1
@@ -19941,7 +19946,7 @@ snapshots:
       '@babel/plugin-transform-runtime': 7.28.5(@babel/core@7.28.5)
       '@babel/preset-react': 7.28.5(@babel/core@7.28.5)
       '@babel/preset-typescript': 7.28.5(@babel/core@7.28.5)
-      '@react-native/babel-preset': 0.81.5(@babel/core@7.28.5)
+      '@react-native/babel-preset': 0.81.5
       babel-plugin-react-compiler: 1.0.0
       babel-plugin-react-native-web: 0.21.2
       babel-plugin-syntax-hermes-parser: 0.29.1
@@ -21380,7 +21385,7 @@ snapshots:
 
   eslint@8.57.1:
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.0(eslint@9.39.1(jiti@1.21.7))
+      '@eslint-community/eslint-utils': 4.9.0(eslint@8.57.1)
       '@eslint-community/regexpp': 4.12.2
       '@eslint/eslintrc': 2.1.4
       '@eslint/js': 8.57.1
@@ -26153,7 +26158,7 @@ snapshots:
     dependencies:
       '@jest/create-cache-key-function': 29.7.0
       '@react-native/assets-registry': 0.83.0-nightly-20251104-502efe1cc
-      '@react-native/codegen': 0.83.0-nightly-20251104-502efe1cc(@babel/core@7.28.5)
+      '@react-native/codegen': 0.83.0-nightly-20251104-502efe1cc
       '@react-native/community-cli-plugin': 0.83.0-nightly-20251104-502efe1cc
       '@react-native/gradle-plugin': 0.83.0-nightly-20251104-502efe1cc
       '@react-native/js-polyfills': 0.83.0-nightly-20251104-502efe1cc
