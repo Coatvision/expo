@@ -84,6 +84,7 @@ export async function transform(
             }),
           ])
         ),
+        comments: null,
         errors: [],
       },
       reactClientReference: getClientReference()!,
@@ -128,6 +129,7 @@ export async function transform(
               }),
             ])
           ),
+          comments: null,
           errors: [],
         },
         reactClientReference: getClientReference(),
@@ -139,6 +141,7 @@ export async function transform(
     return {
       ast: {
         ...t.file(t.program([buildStringRef({ FILE_PATH: JSON.stringify(assetPath) })])),
+        comments: null,
         errors: [],
       },
       reactClientReference: getClientReference(),
@@ -148,6 +151,7 @@ export async function transform(
   return {
     ast: {
       ...generateAssetCodeFileAst(assetRegistryPath, data),
+      comments: null,
       errors: [],
     },
   };

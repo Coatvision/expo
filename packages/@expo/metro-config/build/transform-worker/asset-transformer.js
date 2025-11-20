@@ -53,6 +53,7 @@ async function transform({ filename, options, }, assetRegistryPath, assetDataPlu
                         FILE_PATH: JSON.stringify(`./${(0, filePath_1.toPosixPath)(node_path_1.default.relative(options.projectRoot, absolutePath))}`),
                     }),
                 ])),
+                comments: null,
                 errors: [],
             },
             reactClientReference: getClientReference(),
@@ -86,6 +87,7 @@ async function transform({ filename, options, }, assetRegistryPath, assetDataPlu
                             HEIGHT: data.height != null ? core_1.types.numericLiteral(data.height) : core_1.types.buildUndefinedNode(),
                         }),
                     ])),
+                    comments: null,
                     errors: [],
                 },
                 reactClientReference: getClientReference(),
@@ -96,6 +98,7 @@ async function transform({ filename, options, }, assetRegistryPath, assetDataPlu
         return {
             ast: {
                 ...core_1.types.file(core_1.types.program([buildStringRef({ FILE_PATH: JSON.stringify(assetPath) })])),
+                comments: null,
                 errors: [],
             },
             reactClientReference: getClientReference(),
@@ -104,6 +107,7 @@ async function transform({ filename, options, }, assetRegistryPath, assetDataPlu
     return {
         ast: {
             ...(0, util_1.generateAssetCodeFileAst)(assetRegistryPath, data),
+            comments: null,
             errors: [],
         },
     };
