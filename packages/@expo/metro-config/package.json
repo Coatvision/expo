@@ -57,7 +57,7 @@
     "resolve-from": "^5.0.0"
   },
   "peerDependencies": {
-    "expo": "*"
+    "expo": "workspace:*"
   },
   "peerDependenciesMeta": {
     "expo": {

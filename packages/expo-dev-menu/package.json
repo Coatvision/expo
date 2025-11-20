@@ -45,6 +45,6 @@
     "react-native": "0.83.0-nightly-20251104-502efe1cc"
   },
   "peerDependencies": {
-    "expo": "*"
+    "expo": "workspace:*"
   }
 }

@@ -47,10 +47,10 @@
     "react-test-renderer": "19.2.0"
   },
   "peerDependencies": {
-    "expo": "*",
-    "react": "*",
-    "react-dom": "*",
-    "react-native": "*",
+    "expo": "workspace:*",
+    "react": "workspace:*",
+    "react-dom": "workspace:*",
+    "react-native": "workspace:*",
     "react-native-reanimated": "*",
     "react-native-web": "*"
   },

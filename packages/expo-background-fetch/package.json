@@ -39,6 +39,6 @@
     "expo-module-scripts": "^5.0.7"
   },
   "peerDependencies": {
-    "expo": "*"
+    "expo": "workspace:*"
   }
 }

@@ -19,14 +19,14 @@
     "export:web": "expo export -p web --no-minify"
   },
   "dependencies": {
-    "@expo/dom-webview": "*",
+    "@expo/dom-webview": "workspace:*",
     "anser": "^1.4.9",
     "stacktrace-parser": "^0.1.10"
   },
   "devDependencies": {
     "@expo/spawn-async": "^1.7.2",
     "@types/react": "~19.2.0",
-    "expo-module-scripts": "^5.0.7",
+    "expo-module-scripts": "workspace:*",
     "glob": "^10.4.2",
     "npm-run-all2": "^8.0.4",
     "react": "19.2.0",
@@ -36,11 +36,11 @@
     "typescript-plugin-css-modules": "^5.2.0"
   },
   "peerDependencies": {
-    "@expo/dom-webview": "*",
-    "expo": "*",
-    "react": "*",
-    "react-dom": "*",
-    "react-native": "*",
+    "@expo/dom-webview": "workspace:*",
+    "expo": "workspace:*",
+    "react": "workspace:*",
+    "react-dom": "workspace:*",
+    "react-native": "workspace:*",
     "react-native-web": "*"
   },
   "license": "MIT",

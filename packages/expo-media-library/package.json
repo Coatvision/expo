@@ -41,8 +41,8 @@
     "expo-module-scripts": "^5.0.7"
   },
   "peerDependencies": {
-    "expo": "*",
-    "react-native": "*"
+    "expo": "workspace:*",
+    "react-native": "workspace:*"
   },
   "codegenConfig": {
     "name": "expo-media-library",

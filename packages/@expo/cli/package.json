@@ -113,9 +113,9 @@
     ]
   },
   "peerDependencies": {
-    "expo": "*",
+    "expo": "workspace:*",
     "expo-router": "*",
-    "react-native": "*"
+    "react-native": "workspace:*"
   },
   "peerDependenciesMeta": {
     "expo-router": {

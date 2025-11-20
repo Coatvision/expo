@@ -32,10 +32,10 @@
     "url": "https://github.com/expo/expo.git"
   },
   "peerDependencies": {
-    "expo": "*",
-    "react": "*",
-    "react-dom": "*",
-    "react-native": "*"
+    "expo": "workspace:*",
+    "react": "workspace:*",
+    "react-dom": "workspace:*",
+    "react-native": "workspace:*"
   },
   "peerDependenciesMeta": {
     "react-dom": {

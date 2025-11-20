@@ -69,8 +69,8 @@
     "xstate": "^4.37.2"
   },
   "peerDependencies": {
-    "expo": "*",
-    "react": "*",
-    "react-native": "*"
+    "expo": "workspace:*",
+    "react": "workspace:*",
+    "react-native": "workspace:*"
   }
 }

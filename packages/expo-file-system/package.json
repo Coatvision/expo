@@ -39,7 +39,7 @@
     "jest-expo": "~54.0.11"
   },
   "peerDependencies": {
-    "expo": "*",
-    "react-native": "*"
+    "expo": "workspace:*",
+    "react-native": "workspace:*"
   }
 }

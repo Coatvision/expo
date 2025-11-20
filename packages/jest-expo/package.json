@@ -54,7 +54,7 @@
     "stacktrace-js": "^2.0.2"
   },
   "peerDependencies": {
-    "expo": "*",
-    "react-native": "*"
+    "expo": "workspace:*",
+    "react-native": "workspace:*"
   }
 }

@@ -19,6 +19,6 @@
     "expo-manifests": "~1.0.8"
   },
   "peerDependencies": {
-    "expo": "*"
+    "expo": "workspace:*"
   }
 }

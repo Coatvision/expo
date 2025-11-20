@@ -35,8 +35,8 @@
     "@testing-library/react-native": "^13.2.0"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "react": "workspace:*",
+    "react-native": "workspace:*"
   },
   "jest": {
     "preset": "react-native",

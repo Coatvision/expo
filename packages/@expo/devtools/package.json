@@ -50,8 +50,8 @@
     "ws": "^8.18.0"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "react": "workspace:*",
+    "react-native": "workspace:*"
   },
   "peerDependenciesMeta": {
     "react": {
