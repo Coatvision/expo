@@ -13,6 +13,12 @@ import { searchFilesAsync, spawnAsync } from '../Utils';
  * @param match Path or pattern of the files to match
  */
 export default async function checkUniformityAsync(pkg: Package, match: string): Promise<void> {
+  if (os.platform() === 'win32' && pkg.packageName === 'expo-router' && match === './build') {
+    logger.warn(
+      'Skipping uniformity check for expo-router on Windows because it generates inconsistent source maps maybe related to the commonjs / node10 module resolution in tsconfig.json'
+    );
+    return;
+  }
   if (os.platform() === 'win32' && (await isGitTrackedAsync(pkg, match))) {
     // Transform new line in map files to ensure that the map files are consistent.
     await transformNewLineInMapFilesAsync(pkg, match);
