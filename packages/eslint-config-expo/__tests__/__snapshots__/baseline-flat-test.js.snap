@@ -302,10 +302,6 @@ exports[`lints with the default config: fixtures/baseline/all-02.js 1`] = `
           },
           "desc": "Remove unused variable 'unused1'.",
           "fix": {
-            "range": [
-              0,
-              18,
-            ],
             "text": "",
           },
           "messageId": "removeVar",
@@ -329,10 +325,6 @@ exports[`lints with the default config: fixtures/baseline/all-02.js 1`] = `
           },
           "desc": "Remove unused variable 'unused2'.",
           "fix": {
-            "range": [
-              20,
-              66,
-            ],
             "text": "",
           },
           "messageId": "removeVar",
@@ -356,10 +348,6 @@ exports[`lints with the default config: fixtures/baseline/all-02.js 1`] = `
           },
           "desc": "Remove unused variable 'unused3'.",
           "fix": {
-            "range": [
-              43,
-              64,
-            ],
             "text": "",
           },
           "messageId": "removeVar",
@@ -435,10 +423,6 @@ exports[`lints with the default config: fixtures/baseline/all-03.ts 1`] = `
       "endColumn": 37,
       "endLine": 6,
       "fix": {
-        "range": [
-          125,
-          134,
-        ],
         "text": "x as string",
       },
       "line": 6,
@@ -475,10 +459,6 @@ exports[`lints with the default config: fixtures/baseline/all-04.ts 1`] = `
       "endColumn": 38,
       "endLine": 1,
       "fix": {
-        "range": [
-          24,
-          37,
-        ],
         "text": "string[]",
       },
       "line": 1,
@@ -511,10 +491,6 @@ exports[`lints with the default config: fixtures/baseline/all-05.ts 1`] = `
       "endColumn": 23,
       "endLine": 1,
       "fix": {
-        "range": [
-          21,
-          22,
-        ],
         "text": "",
       },
       "line": 1,
@@ -544,10 +520,6 @@ exports[`lints with the default config: fixtures/baseline/all-06.ts 1`] = `
       "endColumn": 32,
       "endLine": 1,
       "fix": {
-        "range": [
-          25,
-          31,
-        ],
         "text": "number",
       },
       "line": 1,
@@ -562,10 +534,6 @@ exports[`lints with the default config: fixtures/baseline/all-06.ts 1`] = `
       "endColumn": 34,
       "endLine": 2,
       "fix": {
-        "range": [
-          73,
-          80,
-        ],
         "text": "boolean",
       },
       "line": 2,
@@ -580,10 +548,6 @@ exports[`lints with the default config: fixtures/baseline/all-06.ts 1`] = `
       "endColumn": 32,
       "endLine": 3,
       "fix": {
-        "range": [
-          121,
-          127,
-        ],
         "text": "symbol",
       },
       "line": 3,
@@ -598,10 +562,6 @@ exports[`lints with the default config: fixtures/baseline/all-06.ts 1`] = `
       "endColumn": 32,
       "endLine": 4,
       "fix": {
-        "range": [
-          168,
-          174,
-        ],
         "text": "object",
       },
       "line": 4,
@@ -616,10 +576,6 @@ exports[`lints with the default config: fixtures/baseline/all-06.ts 1`] = `
       "endColumn": 32,
       "endLine": 5,
       "fix": {
-        "range": [
-          215,
-          221,
-        ],
         "text": "string",
       },
       "line": 5,
@@ -649,10 +605,6 @@ exports[`lints with the default config: fixtures/baseline/all-06.ts 1`] = `
           },
           "desc": "Replace \`{}\` with \`object\`.",
           "fix": {
-            "range": [
-              271,
-              273,
-            ],
             "text": "object",
           },
           "messageId": "replaceEmptyObjectType",
@@ -663,10 +615,6 @@ exports[`lints with the default config: fixtures/baseline/all-06.ts 1`] = `
           },
           "desc": "Replace \`{}\` with \`unknown\`.",
           "fix": {
-            "range": [
-              271,
-              273,
-            ],
             "text": "unknown",
           },
           "messageId": "replaceEmptyObjectType",
@@ -698,10 +646,6 @@ exports[`lints with the default config: fixtures/baseline/all-07.js 1`] = `
       "endColumn": 21,
       "endLine": 2,
       "fix": {
-        "range": [
-          44,
-          44,
-        ],
         "text": "",
       },
       "line": 2,
@@ -725,10 +669,6 @@ exports[`lints with the default config: fixtures/baseline/all-07.js 1`] = `
       "endColumn": 19,
       "endLine": 4,
       "fix": {
-        "range": [
-          87,
-          87,
-        ],
         "text": "",
       },
       "line": 4,
@@ -752,10 +692,6 @@ exports[`lints with the default config: fixtures/baseline/all-07.js 1`] = `
       "endColumn": 19,
       "endLine": 5,
       "fix": {
-        "range": [
-          0,
-          106,
-        ],
         "text": "import d from './d';
 import c from 'c';
 import b from 'b';
@@ -864,10 +800,6 @@ exports[`lints with the default config: fixtures/baseline/web-native-04.js 1`] =
         {
           "desc": "Update the dependencies array to be: [dependentVariable]",
           "fix": {
-            "range": [
-              177,
-              179,
-            ],
             "text": "[dependentVariable]",
           },
         },
@@ -900,10 +832,6 @@ exports[`lints with the default config: fixtures/baseline/web-native-04.js 1`] =
           },
           "desc": "Remove unused variable 'notAHook'.",
           "fix": {
-            "range": [
-              249,
-              295,
-            ],
             "text": "",
           },
           "messageId": "removeVar",
