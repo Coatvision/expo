@@ -2016,6 +2016,9 @@ importers:
         specifier: ^3.0.0
         version: 3.6.20
     devDependencies:
+      expo-module-scripts:
+        specifier: ^5.0.7
+        version: link:../../expo-module-scripts
       react-dom:
         specifier: 19.2.0
         version: 19.2.0(react@19.2.0)
