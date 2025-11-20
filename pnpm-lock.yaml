@@ -2952,6 +2952,9 @@ importers:
 
   packages/expo-doctor:
     devDependencies:
+      '@expo/cli':
+        specifier: workspace:*
+        version: link:../@expo/cli
       '@expo/config':
         specifier: ~12.0.9
         version: 12.0.10
@@ -4073,6 +4076,9 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
     devDependencies:
+      '@expo/cli':
+        specifier: workspace:*
+        version: link:../@expo/cli
       expo-module-scripts:
         specifier: ^5.0.7
         version: link:../expo-module-scripts
