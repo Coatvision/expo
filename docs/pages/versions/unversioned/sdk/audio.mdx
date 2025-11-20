@@ -9,6 +9,7 @@ platforms: ['android', 'ios', 'web', 'tvos']
 
 import APISection from '~/components/plugins/APISection';
 import { APIInstallSection } from '~/components/plugins/InstallSection';
+import { Collapsible } from '~/ui/components/Collapsible';
 import { ConfigPluginExample, ConfigPluginProperties } from '~/ui/components/ConfigSection';
 import { SnackInline } from '~/ui/components/Snippet';
 import { PlatformTags } from '~/ui/components/Tag/PlatformTags';
@@ -59,6 +60,12 @@ You can configure `expo-audio` using its built-in [config plugin](/config-plugin
       description:
         'A boolean that determines whether to enable the `RECORD_AUDIO` permission on Android.',
       default: 'true',
+    },
+    {
+      name: 'enableBackgroundRecording',
+      description:
+        'A boolean that determines whether to enable background audio recording. On iOS, this adds the `audio` background mode. On Android, this adds foreground service permissions and displays a persistent notification during recording. **Note:** Background recording can significantly impact battery life.',
+      default: 'false',
     },
   ]}
 />
@@ -177,7 +184,7 @@ const styles = StyleSheet.create({
 
 </SnackInline>
 
-### Playing or recording audio in background&ensp;<PlatformTags platforms={['ios']} />
+### Playing audio in background&ensp;<PlatformTags platforms={['ios']} />
 
 On iOS, audio playback and recording in background is only available in standalone apps, and it requires some extra configuration.
 On iOS, each background feature requires a special key in `UIBackgroundModes` array in your **Info.plist** file.
@@ -201,6 +208,90 @@ See an example of **app.json** that enables audio playback in background:
   }
 }
 ```
+
+### Recording audio in background
+
+Background audio recording allows your app to continue recording when it moves to the background or when the device screen locks.
+
+#### Configuration
+
+To enable background recording, use the config plugin in your **app.json**:
+
+```json app.json
+{
+  "expo": {
+    "plugins": [
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to record audio.",
+          "enableBackgroundRecording": true
+        }
+      ]
+    ]
+  }
+}
+```
+
+This automatically configures the required native settings:
+
+- <PlatformTags platforms={['ios']} /> Adds the `audio` UIBackgroundMode capability
+- <PlatformTags platforms={['android']} /> Adds `FOREGROUND_SERVICE_MICROPHONE` and
+  `POST_NOTIFICATIONS` permissions
+
+<Collapsible summary="Manual configuration for bare workflow">
+
+If you're not using [CNG](/workflow/continuous-native-generation/), you'll need to manually configure the native projects:
+
+**iOS** - Add to **ios/YourApp/Info.plist**:
+
+```xml ios/YourApp/Info.plist
+<key>UIBackgroundModes</key>
+<array>
+  <string>audio</string>
+</array>
+```
+
+**Android** - Add to **android/app/src/main/AndroidManifest.xml**:
+
+```xml android/app/src/main/AndroidManifest.xml
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+```
+
+</Collapsible>
+
+#### Usage
+
+After configuring your app, enable background recording at runtime using [`setAudioModeAsync`](#audiosetaudiomodeasyncmode):
+
+```jsx
+import { setAudioModeAsync, useAudioRecorder, RecordingPresets } from 'expo-audio';
+
+await setAudioModeAsync({
+  playsInSilentMode: true,
+  allowsRecording: true,
+  allowsBackgroundRecording: true,
+});
+
+const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+await recorder.prepareToRecordAsync();
+await recorder.record();
+
+// Recording continues in background
+```
+
+#### Platform differences
+
+<PlatformTags platforms={['ios']} />
+
+On iOS, background recording continues seamlessly when the app backgrounds or the screen locks. No additional notification or indicator is shown to the user beyond the system status bar.
+
+<PlatformTags platforms={['android']} />
+
+On Android, background recording requires a foreground service, which displays a persistent notification with the text "Recording audio" and a stop button. This notification cannot be dismissed while recording is active and automatically disappears when recording stops.
+
+> **warning** Background recording can significantly impact battery life. Only enable it when necessary for your app's functionality.
 
 ### Using the AudioPlayer directly
 
