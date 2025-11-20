@@ -3612,6 +3612,9 @@ importers:
       '@types/express':
         specifier: ^5.0.3
         version: 5.0.5
+      expo-module-scripts:
+        specifier: workspace:*
+        version: link:../expo-module-scripts
       npm-run-all2:
         specifier: ^8.0.4
         version: 8.0.4
