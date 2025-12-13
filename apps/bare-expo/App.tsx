@@ -3,6 +3,12 @@ import * as Splashscreen from 'expo-splash-screen';
 import React from 'react';
 import * as DevMenu from 'expo-dev-menu';
 
+// Vercel Speed Insights - web only
+// Uncomment the following for web builds to enable performance monitoring:
+// import { SpeedInsights } from '@vercel/speed-insights/react';
+// or use the function-based approach:
+// import { injectSpeedInsights } from 'expo/speed-insights';
+
 import MainNavigator, { optionalRequire } from './MainNavigator';
 
 let Notifications;
@@ -86,5 +92,12 @@ export default function Main() {
 
   const isLoaded = useLoaded();
 
-  return <ThemeProvider>{isLoaded ? <MainNavigator /> : null}</ThemeProvider>;
+  return (
+    <ThemeProvider>
+      {isLoaded ? <MainNavigator /> : null}
+      {/* Vercel Speed Insights - web only, uncomment to enable:
+        <SpeedInsights />
+      */}
+    </ThemeProvider>
+  );
 }
